@@ -17,11 +17,38 @@ namespace ssl_config
 
             List<string> lines = result.Split(new[] { Environment.NewLine }, StringSplitOptions.None).ToList();
 
-            List<string> list;
+            bool newEntry = false;
+            string key = "";
+            List<string> entry = new List<string>();
             Dictionary<string, List<string>> entries = new Dictionary<string, List<string>>();
-            
+
             foreach (string line in lines)
             {
+                if (line.Contains(":port"))
+                {
+                    newEntry = true;
+                    int pos = line.IndexOf(":");
+                    pos++;
+                    key = line.Substring(pos).Split(':')[1];
+                    entry.Clear();
+                    entry.Add(line);
+                }
+                else 
+                { 
+                    if (newEntry)
+                    {
+                        if (line == "")
+                        {
+                            entries.Add(key, entry);
+                            newEntry = false;
+                        } 
+                        else
+                        {
+                            entry.Add(line);
+                        }
+                    }
+                }
+                
                 Console.WriteLine(line);
             }
 
