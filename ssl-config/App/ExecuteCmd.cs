@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.Remoting.Services;
+using System.Security;
 
-namespace ssl_config
+namespace ssl_config.App
 {
     public static class ExecuteCmd
     {
@@ -13,7 +11,7 @@ namespace ssl_config
         /// </summary>
         /// <param name="command">string command</param>
         /// <returns>string, as output of the command.</returns>
-        public static string Run(string command)
+        public static string Run(string command, bool elevate = false)
         {
             try
             {
@@ -26,8 +24,10 @@ namespace ssl_config
                 procStartInfo.UseShellExecute = false;
                 // Do not create the black window.
                 procStartInfo.CreateNoWindow = true;
+
                 // Now we create a process, assign its ProcessStartInfo and start it
                 System.Diagnostics.Process proc = new System.Diagnostics.Process();
+
                 proc.StartInfo = procStartInfo;
                 proc.Start();
 
@@ -39,7 +39,7 @@ namespace ssl_config
             catch (Exception objException)
             {
                 // Log the exception
-                return "ExecuteCommandSync failed" + objException.Message;
+                return "Command failed: " + command + " " + objException.Message;
             }
         }
 
